@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<script src="/jquery.js"></script>
+	<script src="/vue.js"></script>
+
+	<title>Web Colors</title>
+</head>
+
+<body>
+	<style>
+		@import url("//asterfiles.web.app/roboto.css");
+
+		* {
+			font-family: "Roboto", "Arial", sans-serif;
+
+		}
+
+		td, span {
+			padding: .2em;
+		}
+
+		span:nth-child(2) {
+			padding-right: 5em;
+			padding-left: .4em;
+		}
+
+		table,
+		tr,
+		td {
+			border-collapse: collapse;
+			margin: 0;
+		}
+	</style>
+
+	<section id="table-app">
+		<table>
+			<template v-for="(row, _row) in rows" :key="_row">
+				<tr>
+					<template v-for="(clm, _clm) in columns" :key="_clm">
+						<td>
+							<span :style="{ 
+								backgroundColor: webColors[_clm*rows + _row]?.[0], 
+								color: webColors[_clm*rows + _row]?.[1], 
+							}" class="color-rect">
+								&nbsp;&nbsp;&nbsp;
+							</span>
+							<span>
+								{{ webColors[_clm*rows + _row]?.[0] }}
+							</span>
+						</td>
+					</template>
+				</tr>
+			</template>
+		</table>
+	</section>
+
+	<script>
+		let a;
+		$.getScript("./webcolors.js", () => {
+			a = Vue.createApp({
+				data: () => ({
+					webColors: webColors,
+					columns: 5,
+				}),
+				beforeMount() {
+				},
+				methods: {
+					log: console.log,
+				},
+				computed: {
+					rows() {
+						console.log(this.webColors.length / this.columns);
+						return Math.ceil(this.webColors.length / this.columns);
+					},
+				},
+			}).mount("#table-app");
+		})
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta name="color-scheme" content="dark" />
+	<meta name="robots" content="all" />
+	<meta name="theme-color" content="black" />
+	<meta name="description" content="An overview of all 141 HTML colors" />
+
+	<base href="./" />
+
+	<link rel="manifest" href="./manifest.webmanifest" />
+	<link rel="icon" href="./icon.svg" />
+	<link rel="apple-touch-icon" href="./icon.png" />
+
+	<link rel="preload" as="fetch" crossorigin href="./colors.json" />
+
+	<title>Web Colors</title>
+
+	<style>
+		:root {
+			scrollbar-color: #8888 transparent;
+		}
+
+		@media (hover:none) {
+			* {
+				-webkit-tap-highlight-color: transparent;
+			}
+		}
+
+		body {
+			font-family: system-ui;
+			box-sizing: border-box;
+			min-block-size: 100vh;
+			display: flex;
+			margin: 0;
+			font-size: .9rem;
+			/* overflow-y: hidden; */
+		}
+
+		main {
+			box-sizing: border-box;
+			padding: .3rem;
+			flex-grow: 1;
+
+			display: flex;
+			flex-wrap: wrap;
+			gap: .3rem;
+		}
+
+		main .color {
+			flex-grow: 1;
+			border: none;
+			font-family: inherit;
+			font-size: inherit;
+			cursor: pointer;
+			display: flex;
+			justify-content: center;
+			gap: .5rem;
+			/* border-radius: .4rem; */
+			border-radius: 1vmin;
+			background-color: var(--backgroundColor);
+			color: var(--textColor);
+			align-items: center;
+			/* padding: .1rem .5rem; */
+			padding-inline: .5rem;
+			transition: opacity .4s;
+			outline-offset: 2px;
+		}
+
+		main .color:hover {
+			opacity: 80%;
+		}
+
+		main .color.copied {
+			transition: none;
+			/* background: var(--textColor); */
+			opacity: 40%;
+		}
+
+		main .color .colorName {
+			font-weight: bold;
+		}
+
+		main .color .colorHex {
+			display: inline-flex;
+			gap: .1em;
+			font-family: monospace;
+			opacity: 80%;
+		}
+
+	</style>
+
+	<script type="module">
+		navigator.serviceWorker.register("./service-worker.js", { scope: "./" });
+
+		const colors = await(await window.fetch("./colors.json")).json();
+
+		const fragment = new DocumentFragment();
+
+		for (const [color, textColor] of colors) {
+			const container = document.createElement("button");
+			container.classList.add("color");
+
+			const colorNameSpan = document.createElement("span");
+			colorNameSpan.textContent = color;
+			colorNameSpan.classList.add("colorName");
+			container.appendChild(colorNameSpan);
+
+			const colorHexSpan = document.createElement("span");
+			colorHexSpan.classList.add("colorHex");
+
+			{
+				const tempDiv = document.createElement("div");
+				document.body.appendChild(tempDiv);
+				tempDiv.style.color = color;
+				colorHexSpan.append(...
+					["#", ...Object.values(
+						window.getComputedStyle(tempDiv).color.match(/rgb\((?<red>\d+), (?<green>\d+), (?<blue>\d+)\)/).groups
+					).map((number) => (+number).toString(16).toUpperCase().padStart(2, "0"))].map((hex) => {
+						const span = document.createElement("span");
+						span.textContent = hex;
+						return span;
+					})
+				);
+				tempDiv.remove();
+			}
+
+			container.appendChild(colorHexSpan);
+			container.style.setProperty("--backgroundColor", color);
+			container.style.setProperty("--textColor", textColor);
+
+			container.addEventListener("click", () => {
+				navigator.clipboard?.writeText(color);
+				container.classList.add("copied");
+				window.requestAnimationFrame(() => {
+					window.requestAnimationFrame(() => {
+						container.classList.remove("copied");
+					});
+				});
+			});
+
+			fragment.appendChild(container);
+		}
+
+		document.querySelector("main").appendChild(fragment);
+
+		{ /// service worker, update & PWA
+			const registerServiceWorker = () => navigator.serviceWorker?.register("./service-worker.js", { scope: "./", updateViaCache: "all" });
+			registerServiceWorker();
+
+			navigator.serviceWorker?.addEventListener("message", async ({ data }) => {
+				if (data.message === "updateAvailable") registerServiceWorker();
+			});
+
+			const checkReadyState = async () => {
+				if (document.readyState === "complete" && navigator.onLine) (await navigator.serviceWorker?.ready)?.active.postMessage({ message: "checkForUpdate" });
+			};
+			checkReadyState();
+			document.addEventListener("readystatechange", checkReadyState);
+		}
+	</script>
+</head>
+
+<body>
+	<noscript>
+		Please enable JavaScript to view this site.
+		<hr />
+	</noscript>
+
+	<main></main>
+</body>
+
+</html>

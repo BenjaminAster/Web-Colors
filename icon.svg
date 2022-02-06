@@ -1,0 +1,6 @@
+<svg viewBox="0 0 480 480" xmlns="http://www.w3.org/2000/svg" style="color-scheme: dark light">
+	<path d="M 240 0 A 240 240 0 0 1 0 240 A 240 240 0 0 1 240 0 Z" fill="slateBlue" />
+	<path d="M 240 0 A 240 240 0 0 0 480 240 A 240 240 0 0 0 240 0 Z" fill="mediumVioletRed" />
+	<path d="M 240 480 A 240 240 0 0 0 0 240 A 240 240 0 0 0 240 480 Z" fill="mediumSpringGreen" />
+	<path d="M 240 480 A 240 240 0 0 1 480 240 A 240 240 0 0 1 240 480 Z" fill="dodgerBlue" />
+</svg>

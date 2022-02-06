@@ -1,0 +1,16 @@
+{
+	"name": "Web Colors",
+	"start_url": "./",
+	"scope": "./",
+	"display": "standalone",
+	"theme_color": "black",
+	"background_color": "black",
+	"icons": [
+		{
+			"src": "./icon.png",
+			"type": "image/png",
+			"sizes": "512x512",
+			"purpose": "maskable any"
+		}
+	]
+}
