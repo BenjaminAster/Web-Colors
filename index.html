@@ -4,10 +4,13 @@
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<meta name="color-scheme" content="dark" />
+	<meta name="color-scheme" content="dark light" />
 	<meta name="robots" content="all" />
 	<meta name="theme-color" content="black" />
-	<meta name="description" content="An overview of all 141 HTML colors" />
+	<meta name="description" content="A simple overview of all 141 CSS colors." />
+	<meta name="author" content="Benjamin Aster" />
+	<meta name="repository" content="https://github.com/BenjaminAster/Web-Colors" />
+	<meta property="og:image" content="https://benjaminaster.com/colors/icon.png" />
 
 	<base href="./" />
 
@@ -24,14 +27,14 @@
 			scrollbar-color: #8888 transparent;
 		}
 
-		@media (hover:none) {
+		@media (hover: none) {
 			* {
 				-webkit-tap-highlight-color: transparent;
 			}
 		}
 
 		body {
-			font-family: system-ui;
+			font-family: system-ui, sans-serif;
 			box-sizing: border-box;
 			min-block-size: 100vh;
 			display: flex;
@@ -66,6 +69,7 @@
 			align-items: center;
 			/* padding: .1rem .5rem; */
 			padding-inline: .5rem;
+			margin: 0;
 			transition: opacity .4s;
 			outline-offset: 2px;
 		}
@@ -94,8 +98,6 @@
 	</style>
 
 	<script type="module">
-		navigator.serviceWorker.register("./service-worker.js", { scope: "./" });
-
 		const colors = await(await window.fetch("./colors.json")).json();
 
 		const fragment = new DocumentFragment();
